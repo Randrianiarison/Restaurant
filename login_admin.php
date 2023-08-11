@@ -49,13 +49,9 @@
     <div class="container">
         <h1 class="text-center">Admin Login</h1>
         <?php
-        // Vérifier si le formulaire de connexion est soumis
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Récupérer les données du formulaire
             $email = $_POST['email'];
             $password = $_POST['password'];
-
-            // Remplacez ces informations par celles de votre base de données
             $db_host = 'localhost';
             $db_name = 'restaurants';
             $db_user = 'johns';
@@ -68,32 +64,24 @@
             if ($conn->connect_error) {
                 die("Erreur de connexion à la base de données : " . $conn->connect_error);
             }
-
-            // Préparer la requête pour récupérer l'administrateur par email
             $stmt = $conn->prepare("SELECT id, nom, prenom, email, mot_de_passe FROM administrateur WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
 
             if ($result->num_rows === 1) {
-                // Administrateur trouvé, vérifier le mot de passe
                 $admin = $result->fetch_assoc();
                 if (password_verify($password, $admin['mot_de_passe'])) {
-                    // Mot de passe correct, créer une session et rediriger vers le tableau de bord de l'administrateur
                     session_start();
                     $_SESSION['admin_id'] = $admin['id'];
                     header('Location: liste_admin.php');
                     exit;
                 } else {
-                    // Mot de passe incorrect
                     echo '<div class="alert alert-danger">Mot de passe incorrect.</div>';
                 }
             } else {
-                // Administrateur non trouvé
                 echo '<div class="alert alert-danger">Administrateur non trouvé.</div>';
             }
-
-            // Fermer la connexion à la base de données
             $conn->close();
         }
         ?>

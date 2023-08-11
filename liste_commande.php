@@ -70,10 +70,10 @@
                     }
 
                     // Récupérer la liste des commandes avec les informations du client, du plat et de la table
-                    $queryCommandes = "SELECT commande.id_commande, clients.nom AS client_nom, commande.date_commande, plats.Nom AS plat_nom, plats.prix, tables.nom AS table_nom 
+                    $queryCommandes = "SELECT commande.id_commande, clients.nom AS client_nom, commande.date_commande, plat.Nom AS plat_nom, plat.prix, tables.nom AS table_nom 
                                        FROM commande
                                        INNER JOIN clients ON commande.id_client = clients.id_client
-                                       INNER JOIN plats ON commande.id_plat = plats.ID_plat
+                                       INNER JOIN plat ON commande.id_plat = plat.ID_plat
                                        INNER JOIN tables ON commande.id_table = tables.id_table";
                     $resultCommandes = $conn->query($queryCommandes);
 
@@ -93,7 +93,7 @@
                             echo "<input type='hidden' name='platNom' value='" . $rowCommande['plat_nom'] . "'>";
                             echo "<input type='hidden' name='quantite' value='1'>";
                             echo "<input type='hidden' name='prix' value='" . $rowCommande['prix'] . "'>";
-                            echo "<button type='submit' class='btn btn-primary' name='validerCommande'>Valider</button>";
+                            echo "<button type='submit' class='btn btn-primary' name='validerCommande'>Livré</button>";
                             echo "</form></td>";
 
                             echo "</tr>";
@@ -108,45 +108,33 @@
             </table>
         </div>
     </div>
-
-    <!-- Votre code HTML ... -->
-
-
 <?php
-// Vérifier si le bouton "Valider" est soumis
 if (isset($_POST['validerCommande'])) {
-    // Connexion à la base de données
     $conn = new mysqli('localhost', 'johns', 'admin', 'restaurants');
     if ($conn->connect_error) {
         die("Erreur de connexion à la base de données : " . $conn->connect_error);
     }
-
-    // Récupérer les données du formulaire
     $commandeId = $_POST['commandeId'];
     $clientNom = $_POST['clientNom'];
     $platNom = $_POST['platNom'];
     $quantite = $_POST['quantite'];
     $prix = $_POST['prix'];
-
-    // Ajouter la facture dans la table "facture"
-    $queryFacture = "INSERT INTO facture (nom, prix, date, id_commande, id_plat, plat) VALUES ('$clientNom', $prix * $quantite, CURRENT_DATE(), $commandeId, (SELECT id_plat FROM plats WHERE Nom = '$platNom'), '$platNom')";
+    $queryFacture = "INSERT INTO facture (nom, prix, date, id_commande, id_plat, plat) VALUES ('$clientNom', $prix * $quantite, CURRENT_DATE(), $commandeId, (SELECT id_plat FROM plat WHERE Nom = '$platNom'), '$platNom')";
     if ($conn->query($queryFacture) === TRUE) {
         echo "<script>alert('La facture a été ajoutée avec succès.');</script>";
     } else {
         echo "Erreur lors de l'ajout de la facture : " . $conn->error;
     }
     
-    $queryUpdatePlat = "UPDATE plats SET nombre = nombre - $quantite WHERE Nom = '$platNom'";
+    $queryUpdatePlat = "UPDATE plat SET nombre = nombre - $quantite WHERE Nom = '$platNom'";
     if ($conn->query($queryUpdatePlat) === TRUE) {
         echo "<script>alert('La quantité a été mise à jour dans le table plats.');</script>";
     } else {
         echo "Erreur lors de la mise à jour de la quantité dans le table plats : " . $conn->error;
     }
-
-    // Masquer la commande validée en supprimant la commande du table "commande"
     $queryMasquerCommande = "DELETE FROM commande WHERE id_commande = $commandeId";
     if ($conn->query($queryMasquerCommande) === TRUE) {
-        echo "<script>alert('La commande a été masquée après validation.');</script>";
+        echo "<script>alert('La commande a été livrée.');</script>";
     } else {
         echo "Erreur lors du masquage de la commande : " . $conn->error;
     }

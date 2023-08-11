@@ -27,6 +27,8 @@ function getIdClientByEmail($email) {
     }
 }
 
+// ...
+
 // Vérifier si le formulaire de connexion est soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer l'email du formulaire
@@ -43,6 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // L'email n'existe pas, afficher un message d'erreur
         $loginError = 'Cet email n\'existe pas.';
+    }
+} elseif (isset($_GET['plat_id'])) {
+    $selectedPlatId = $_GET['plat_id'];
+    // Récupérer le nom du plat sélectionné
+    $query = "SELECT Nom FROM plat WHERE id_plat = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $selectedPlatId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $selectedPlatNom = $row['Nom'];
     }
 }
 ?>
@@ -84,7 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container">
         <h1 class="mt-4 text-center">Page de connexion</h1>
-
+        <?php if (isset($selectedPlatNom)): ?>
+            <p class="mt-2 text-center">Vous avez sélectionné le plat : <?php echo $selectedPlatNom; ?></p>
+        <?php endif; ?>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-container">

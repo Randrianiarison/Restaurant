@@ -6,15 +6,15 @@
     <style>
         body {
             padding: 20px;
-            margin-top: 60px; /* Ajouter une marge en haut pour dégager l'espace sous la barre de menu */
+            margin-top: 60px; 
         }
         .plat-card {
             margin-bottom: 20px;
-            padding: 10px; /* Réduire l'espace intérieur des cartes */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease; /* Added for animation */
+            transition: transform 0.3s ease;
         }
         .plat-card h2 {
             margin-top: 0;
@@ -25,7 +25,6 @@
             margin-right: 20px;
             float: left;
         }
-        /* Styles pour le nouveau menu */
         .navbar {
             background-color: #EFAC11;
             position: fixed;
@@ -53,16 +52,17 @@
         .nav-item a:hover {
             color: #ddd;
         }
-
-        /* Animation styles */
         .plat-card:hover {
-            transform: scale(1.05); /* Zoom in by 5% */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+            transform: scale(1.05); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .liste{
+            text-decoration: none;
+            color :black;
         }
     </style>
 </head>
 <body>
-    <!-- Nouveau menu -->
     <div>
     <nav class="navbar">
         <a class="navbar-brand" href="#" style="font-size:50px">Mon Restaurant</a>
@@ -74,29 +74,28 @@
         </ul>
     </nav>
     </div>
-    <!-- Contenu principal -->
     <div class="container">
         <h1 class="text-center mt-4">Liste des plats</h1>
+        <a class="liste" href="client_login.php">
         <div class="row">
-            <?php
-            // Connexion à la base de données
+        <?php
             $conn = new mysqli('localhost', 'johns', 'admin', 'restaurants');
             if ($conn->connect_error) {
                 die("Erreur de connexion à la base de données : " . $conn->connect_error);
             }
-
-            // Récupération des plats depuis la table "plats"
-            $query = "SELECT * FROM plats";
+            $query = "SELECT * FROM plat";
             $result = $conn->query($query);
-
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="col-md-6">';
                     echo '<div class="plat-card">';
-                    echo '<img src="' . $row['Image'] . '" alt="Image du plat" class="plat-image">';
+                    $imageData = base64_encode($row['Image']);
+                    $imageSrc = 'data:image/*;base64,' . $imageData;
+                    
+                    echo '<img src="' . $imageSrc . '" alt="Image du plat" class="plat-image">';
                     echo '<h2>' . $row['Nom'] . '</h2>';
                     echo '<p><strong>Description :</strong> ' . $row['Description'] . '</p>';
-                    echo '<p><strong>Prix :</strong> ' . $row['Prix'] ." Ariary". '</p>';
+                    echo '<p><strong>Prix :</strong> ' . $row['Prix'] . ' Ariary</p>';
                     echo '<p><strong>Catégorie :</strong> ' . $row['Categorie'] . '</p>';
                     echo '</div>';
                     echo '</div>';
@@ -106,20 +105,15 @@
                 echo '<p class="text-center">Aucun plat trouvé.</p>';
                 echo '</div>';
             }
-
-            // Fermeture de la connexion à la base de données
             $conn->close();
             ?>
-        </div>
+        </div></a>
     </div>
 
     <script src="js/bootstrap.bundle.min.js"></script>
     <script>
-        // Wait for the page to load
         window.addEventListener("load", () => {
             const platCards = document.querySelectorAll(".plat-card");
-
-            // Add event listeners to each dish card
             platCards.forEach((card) => {
                 card.addEventListener("mouseenter", () => {
                     card.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
