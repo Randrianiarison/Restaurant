@@ -5,9 +5,9 @@
     <!-- Inclure les fichiers Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
-       body {
+        body {
             padding-top: 50px;
-            background-color: #f7f7f7; /* Couleur de fond de la page */
+            background-color: #f7f7f7;
         }
 
         .container {
