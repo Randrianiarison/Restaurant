@@ -26,8 +26,6 @@
             margin-top: 10px;
             display: none;
         }
-
-        /* Ajouter du style pour le bouton Ajouter */
         .btn-ajouter {
             background-color: #007bff;
             color: #fff;
@@ -96,7 +94,6 @@
     </script>
 </body>
 </html>
-
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nom = $_POST["nom"];
@@ -111,16 +108,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sss", $nom, $poste, $date_embauche);
 
     $response = array();
-
-    // Execute the query and check for success
     if ($stmt->execute()) {
         $response['success'] = true;
     } else {
         $response['success'] = false;
         $response['message'] = "Erreur lors de l'ajout de l'employé : " . $conn->error;
     }
-
-    // Close the database connection
     $stmt->close();
     $conn->close();
 

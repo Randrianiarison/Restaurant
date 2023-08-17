@@ -78,7 +78,7 @@
         <h1 class="text-center mt-4">Liste des plats</h1>
         <a class="liste" href="client_login.php">
         <div class="row">
-        <?php
+ <?php
             $conn = new mysqli('localhost', 'johns', 'admin', 'restaurants');
             if ($conn->connect_error) {
                 die("Erreur de connexion à la base de données : " . $conn->connect_error);
@@ -86,18 +86,27 @@
             $query = "SELECT * FROM plat";
             $result = $conn->query($query);
             if ($result->num_rows > 0) {
+                $platCount = 0; // Variable pour compter les plats affichés
                 while ($row = $result->fetch_assoc()) {
+                    $platCount++;
+
                     echo '<div class="col-md-6">';
+                    echo '<a class="liste" href="client_login.php?id=' . $row['ID_plat'] . '">';
                     echo '<div class="plat-card">';
+
+                    // Affichage de l'image, nom, description, prix et catégorie du plat
                     $imageData = base64_encode($row['Image']);
                     $imageSrc = 'data:image/*;base64,' . $imageData;
-                    
+
                     echo '<img src="' . $imageSrc . '" alt="Image du plat" class="plat-image">';
+                    echo '<h3>' . $row['ID_plat'] . '</h3>';
                     echo '<h2>' . $row['Nom'] . '</h2>';
                     echo '<p><strong>Description :</strong> ' . $row['Description'] . '</p>';
                     echo '<p><strong>Prix :</strong> ' . $row['Prix'] . ' Ariary</p>';
                     echo '<p><strong>Catégorie :</strong> ' . $row['Categorie'] . '</p>';
+
                     echo '</div>';
+                    echo '</a>';
                     echo '</div>';
                 }
             } else {
@@ -108,6 +117,9 @@
             $conn->close();
             ?>
         </div></a>
+                <div class="text-center mt-4">
+            <p>Nombre de plats affichés : <?php echo $platCount; ?></p>
+        </div>
     </div>
 
     <script src="js/bootstrap.bundle.min.js"></script>

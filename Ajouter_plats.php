@@ -4,7 +4,6 @@ $conn = new mysqli('localhost', 'johns', 'admin', 'restaurants');
 if ($conn->connect_error) {
     die("Erreur de connexion à la base de données : " . $conn->connect_error);
 }
-// Fonction pour ajouter un plat dans la table "plats"
 function ajouterPlat($nom, $description, $prix, $categorie, $nombre, $image) {
     global $conn;
 
@@ -31,23 +30,15 @@ function ajouterPlat($nom, $description, $prix, $categorie, $nombre, $image) {
         return false;
     }
 }
-
-
-// Variables pour afficher les messages de succès ou d'erreur
 $message = '';
 $success = false;
-
-// Vérifier si le formulaire d'ajout de plat est soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Récupérer les données du formulaire
     $nom = $_POST['nom'];
     $description = $_POST['description'];
     $prix = $_POST['prix'];
     $categorie = $_POST['categorie'];
     $nombre = $_POST['nombre'];
     $image = $_FILES['image'];
-
-    // Appeler la fonction d'ajout de plat
     if (ajouterPlat($nom, $description, $prix, $categorie, $nombre, $image)) {
         $message = 'Le plat a été ajouté avec succès.';
         $success = true;
@@ -55,8 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = 'Erreur lors de l\'ajout du plat.';
     }
 }
-
-// Récupérer la liste des plats
 $query = "SELECT * FROM plats";
 $result = $conn->query($query);
 $plats = [];
