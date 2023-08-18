@@ -2,12 +2,11 @@
 <html>
 <head>
     <title>Liste des administrateurs</title>
-    <!-- Inclure les fichiers Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
         body {
             padding-top: 20px;
-            background-color: #f7f7f7; /* Couleur de fond de la page */
+            background-color: #f7f7f7;
         }
 
         .container {
@@ -19,7 +18,7 @@
         }
 
         .custom-table {
-            background-color: #ffffff; /* Couleur de fond du tableau */
+            background-color: #ffffff;
         }
 
         .administrateur-liste {
@@ -28,8 +27,8 @@
 
         .titre {
             font-size: 40px;
-            margin-bottom: 30px; /* Distance supplémentaire entre le titre et la liste */
-            color: #007bff; /* Couleur du titre */
+            margin-bottom: 30px;
+            color: #007bff;
         }
 
         .lien {
@@ -44,56 +43,54 @@
         }
 
         .lien:nth-child(odd) {
-            background-color: #007bff; /* Couleur de fond du lien */
-            color: #ffffff; /* Couleur du texte du lien */
+            background-color: #007bff;
+            color: #ffffff;
         }
 
         .lien:nth-child(even) {
-            background-color: #28a745; /* Couleur de fond du lien */
-            color: #ffffff; /* Couleur du texte du lien */
+            background-color: #28a745;
+            color: #ffffff;
         }
 
         .lien:hover {
-            background-color: #0056b3; /* Couleur de fond du lien au survol */
-            color: #ffffff; /* Couleur du texte du lien au survol */
+            background-color: #0056b3;
+            color: #ffffff;
         }
 
         .navbar {
-            background-color: #343a40; /* Couleur de fond de la barre de navigation */
+            background-color: #343a40;
             padding: 10px 0;
         }
 
         .navbar-brand {
             font-size: 24px;
-            color: #ffffff; /* Couleur du texte du lien du logo */
+            color: #ffffff;
             font-weight: bold;
         }
 
         .nav-link {
-            color: #ffffff; /* Couleur du texte des liens de la barre de navigation */
+            color: #ffffff;
         }
 
         .nav-link:hover {
-            color: #f7f7f7; /* Couleur du texte des liens de la barre de navigation au survol */
+            color: #f7f7f7;
         }
 
         .table th, .table td {
-            border-color: #dee2e6; /* Couleur des bordures du tableau */
+            border-color: #dee2e6;
         }
 
         .table th {
-            background-color: #343a40; /* Couleur de fond des en-têtes de colonnes */
-            color: #ffffff; /* Couleur du texte des en-têtes de colonnes */
+            background-color: #343a40;
+            color: #ffffff;
         }
 
         .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #f2f2f2; /* Couleur de fond des lignes impaires du tableau */
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
-
-<!-- Menu bar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="#">Mon Restaurant</a>
@@ -110,7 +107,7 @@
                     <a class="nav-link" href="table.php">Ajouter tables</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="employer.php">Ajouter employer</a>
+                    <a class="nav-link" href="liste_commande.php">Liste Commande</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">Déconnecter</a>
@@ -130,7 +127,6 @@
             <thead class="thead-dark">
                 <tr>
                     <th>Nom</th>
-                    <th>Prénom</th>
                     <th>Email</th>
                 </tr>
             </thead>
@@ -146,14 +142,13 @@
                     $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                     // Requête pour récupérer la liste des administrateurs
-                    $requete = "SELECT nom, prenom, email FROM administrateur";
+                    $requete = "SELECT username, email FROM admin";
                     $resultat = $connexion->query($requete);
 
                     // Afficher chaque administrateur dans le tableau
                     while ($administrateur = $resultat->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>";
-                        echo "<td>" . $administrateur['nom'] . "</td>";
-                        echo "<td>" . $administrateur['prenom'] . "</td>";
+                        echo "<td>" . $administrateur['username'] . "</td>";
                         echo "<td>" . $administrateur['email'] . "</td>";
                         echo "</tr>";
                     }
@@ -166,7 +161,6 @@
     </div>
 </div>
 
-<!-- Inclure les fichiers Bootstrap JavaScript pour les fonctionnalités interactives (facultatif) -->
 <script src="js/bootstrap.min.js"></script>
 
 </body>

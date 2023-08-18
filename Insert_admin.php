@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Enregistrement Admin</title>
-    <!-- Ajouter le lien vers les fichiers Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
     </style>
@@ -19,9 +18,7 @@
                 <div class="card-body">
 
                     <?php
-                    // Vérifier si le formulaire a été soumis
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                        // Connexion à la base de données (remplacez ces informations par les vôtres)
                         $servername = "localhost";
                         $username = "johns";
                         $password = "admin";
@@ -38,8 +35,6 @@
                         $username = $_POST["username"];
                         $email = $_POST["email"];
                         $password = $_POST["password"];
-
-                        // Préparer et exécuter la requête SQL d'insertion
                         $stmt = $conn->prepare("INSERT INTO admin (username, email, password) VALUES (?, ?, ?)");
                         $stmt->bind_param("sss", $username, $email, $password);
                         $stmt->execute();

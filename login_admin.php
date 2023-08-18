@@ -2,9 +2,8 @@
 <html>
 <head>
     <title>Admin Login</title>
-    <!-- Inclure les fichiers Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <style>
+      <style>
         body {
             padding-top: 50px;
             background-color: #f7f7f7;
@@ -49,31 +48,32 @@
     <div class="container">
         <h1 class="text-center">Admin Login</h1>
         <?php
+        session_start();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['password'];
+
+            // Connexion à la base de données
             $db_host = 'localhost';
             $db_name = 'restaurants';
             $db_user = 'johns';
             $db_pass = 'admin';
 
-            // Connexion à la base de données
             $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
-            // Vérifier s'il y a une erreur de connexion
             if ($conn->connect_error) {
                 die("Erreur de connexion à la base de données : " . $conn->connect_error);
             }
-            $stmt = $conn->prepare("SELECT id, nom, prenom, email, mot_de_passe FROM administrateur WHERE email = ?");
-            $stmt->bind_param("s", $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
+
+            // Requête pour vérifier l'administrateur
+            $sql = "SELECT id, username, email, password FROM admin WHERE email = '$email' LIMIT 1";
+            $result = $conn->query($sql);
 
             if ($result->num_rows === 1) {
                 $admin = $result->fetch_assoc();
-                if (password_verify($password, $admin['mot_de_passe'])) {
-                    session_start();
-                    $_SESSION['admin_id'] = $admin['id'];
+                if ($password === $admin['password']) {
+                    $_SESSION['id'] = $admin['id'];
                     header('Location: liste_admin.php');
                     exit;
                 } else {
@@ -82,11 +82,12 @@
             } else {
                 echo '<div class="alert alert-danger">Administrateur non trouvé.</div>';
             }
+
             $conn->close();
         }
         ?>
 
-        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="text" class="form-control" id="email" name="email" required>
@@ -98,20 +99,9 @@
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </form>
         <div class="text-center mt-3">
-            <a href="index.php" class="back-link" title="lien vers le page d'acceuil">Retour à l'accueil</a>
+            <a href="index.php" class="back-link" title="lien vers la page d'accueil">Retour à l'accueil</a>
         </div>
     </div>
     <script src="js/bootstrap.min.js"></script>
-    <script>
-        const darkModeToggle = document.createElement('button');
-        darkModeToggle.classList.add('btn', 'btn-secondary', 'dark-mode-toggle');
-        darkModeToggle.innerText = 'Mode Dark';
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-        }
-
-        darkModeToggle.addEventListener('click', toggleDarkMode);
-        document.body.appendChild(darkModeToggle);
-    </script>
 </body>
 </html>

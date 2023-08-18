@@ -68,7 +68,6 @@
         <a class="navbar-brand" href="#" style="font-size:50px">Mon Restaurant</a>
         <ul class="navbar-nav">
             <li class="nav-item"><a class="nav-link" href="index.php" title="Page d'acceuil">Accueil</a></li>
-            <li class="nav-item"><a class="nav-link" href="client_login.php"title="Quel lien utiliser si vous souhaitez acheter quelque chose">Client</a></li>
             <li class="nav-item"><a class="nav-link" href="login_admin.php"title="Lien pour l'administrateur ou les employeurs">Administrateur</a></li>
             <li class="nav-item"><a class="nav-link" href="#apropos"title="si vous aves plus de detaille de cette restaurant">À propos</a></li>
         </ul>
@@ -86,15 +85,13 @@
             $query = "SELECT * FROM plat";
             $result = $conn->query($query);
             if ($result->num_rows > 0) {
-                $platCount = 0; // Variable pour compter les plats affichés
+                $platCount = 0;
                 while ($row = $result->fetch_assoc()) {
                     $platCount++;
 
                     echo '<div class="col-md-6">';
                     echo '<a class="liste" href="client_login.php?id=' . $row['ID_plat'] . '">';
                     echo '<div class="plat-card">';
-
-                    // Affichage de l'image, nom, description, prix et catégorie du plat
                     $imageData = base64_encode($row['Image']);
                     $imageSrc = 'data:image/*;base64,' . $imageData;
 
