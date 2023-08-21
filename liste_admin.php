@@ -107,7 +107,28 @@
                     <a class="nav-link" href="table.php">Ajouter tables</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="liste_commande.php">Liste Commande</a>
+                    <a class="nav-link" href="liste_commande.php">
+                        <i class="fas fa-bell"></i>
+                        <?php
+                        $dsn = "mysql:host=localhost;dbname=restaurants;charset=utf8mb4";
+                        $nom_utilisateur = "johns";
+                        $mot_de_passe_db = "admin";
+                        try {
+                            $connexion = new PDO($dsn, $nom_utilisateur, $mot_de_passe_db);
+                            $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                            $requeteCount = "SELECT COUNT(*) AS count_commandes FROM commande";
+                            $resultatCount = $connexion->query($requeteCount);
+                            $countCommandes = $resultatCount->fetchColumn();
+
+                            if ($countCommandes > 0) {
+                                echo "<span class='notification-count'>Commandes : $countCommandes</span>";
+
+                            }
+                        } catch (PDOException $e) {
+                            // Gérer les erreurs
+                        }
+                        ?>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php">Déconnecter</a>
@@ -125,37 +146,37 @@
     <div class="administrateur-liste">
         <table class="table table-striped table-bordered custom-table">
             <thead class="thead-dark">
-                <tr>
-                    <th>Nom</th>
-                    <th>Email</th>
-                </tr>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+            </tr>
             </thead>
             <tbody>
-                <?php
-                // Connexion à la base de données en utilisant PDO
-                $dsn = "mysql:host=localhost;dbname=restaurants;charset=utf8mb4";
-                $nom_utilisateur = "johns";
-                $mot_de_passe_db = "admin";
+            <?php
+            // Connexion à la base de données en utilisant PDO
+            $dsn = "mysql:host=localhost;dbname=restaurants;charset=utf8mb4";
+            $nom_utilisateur = "johns";
+            $mot_de_passe_db = "admin";
 
-                try {
-                    $connexion = new PDO($dsn, $nom_utilisateur, $mot_de_passe_db);
-                    $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                $connexion = new PDO($dsn, $nom_utilisateur, $mot_de_passe_db);
+                $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    // Requête pour récupérer la liste des administrateurs
-                    $requete = "SELECT username, email FROM admin";
-                    $resultat = $connexion->query($requete);
+                // Requête pour récupérer la liste des administrateurs
+                $requete = "SELECT username, email FROM admin";
+                $resultat = $connexion->query($requete);
 
-                    // Afficher chaque administrateur dans le tableau
-                    while ($administrateur = $resultat->fetch(PDO::FETCH_ASSOC)) {
-                        echo "<tr>";
-                        echo "<td>" . $administrateur['username'] . "</td>";
-                        echo "<td>" . $administrateur['email'] . "</td>";
-                        echo "</tr>";
-                    }
-                } catch (PDOException $e) {
-                    die("Erreur de connexion à la base de données : " . $e->getMessage());
+                // Afficher chaque administrateur dans le tableau
+                while ($administrateur = $resultat->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<tr>";
+                    echo "<td>" . $administrateur['username'] . "</td>";
+                    echo "<td>" . $administrateur['email'] . "</td>";
+                    echo "</tr>";
                 }
-                ?>
+            } catch (PDOException $e) {
+                die("Erreur de connexion à la base de données : " . $e->getMessage());
+            }
+            ?>
             </tbody>
         </table>
     </div>

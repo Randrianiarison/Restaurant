@@ -118,6 +118,15 @@ if (isset($_POST['validerCommande'])) {
     $quantite = $_POST['quantite'];
     $prix = $_POST['prix'];
     $montant = $quantite * $prix;
+
+    $queryVerifierFacture = "SELECT COUNT(*) AS count_factures FROM factures WHERE Nom = '$clientNom'";
+    $resultVerifierFacture = $conn->query($queryVerifierFacture);
+    $rowVerifierFacture = $resultVerifierFacture->fetch_assoc();
+    $countFactures = $rowVerifierFacture['count_factures'];
+     if ($countFactures > 0) {
+        echo "<script>alert('Vous êtes déjà un client, donc vous avez des bonus.');</script>";
+    }
+
     $queryFacture = "INSERT INTO factures (Nom, Plat, Nombre, Somme, Date) 
                      VALUES ('$clientNom', '$platNom', $quantite, $montant, NOW())";
 
@@ -126,7 +135,10 @@ if (isset($_POST['validerCommande'])) {
     } else {
         echo "Erreur lors de l'ajout de la facture : " . $conn->error;
     }
-
+    if($quantite >=10){
+        $quantite+=1;
+        echo "Tu as de bonus 1";
+    }
     $queryUpdatePlat = "UPDATE plat SET nombre = nombre - $quantite WHERE Nom = '$platNom'";
     if ($conn->query($queryUpdatePlat) === TRUE) {
         echo "<script>alert('La quantité a été mise à jour dans le tableau plats.');</script>";
